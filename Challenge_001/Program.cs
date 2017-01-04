@@ -8,48 +8,82 @@ namespace Challenge_001
 {
     class Program
     {
+        //will 
+        static bool correction;
+        static Pair currentPair;
+
         static void Main(string[] args)
         {
-            //Get string from user
-            string input = Console.ReadLine();
+            //Will be used to store user input
+            string input = string.Empty;
 
-            //string paranthese attributes
-            List<int> positionsOpen = new List<int>();
-            List<int> positionsClose = new List<int>();
+            //loops until the user types quit
+            while (true)
+            {
+                correction = true;
+                //prompts user to type
+                Console.Write("Enter a string with nested paranthese: ");
+                //Get string from user
+                input = Console.ReadLine();
+                if (input.ToUpper() == "QUIT") { break; }
 
-            //Records positions of each paranthese in string
-            for(int i = 0; i < input.Length; i++){
-                if(input[i] == '('){ positionsOpen.Add(i); }
-                if(input[i] == ')'){ positionsClose.Add(i); }
-            }
-            //Ends program if the string is invalid
-            if(positionsClose.Count != positionsOpen.Count) {
-                Console.WriteLine("The entered string is invalid");
-                return;
-            }
-
-            //Checks all the paranthese in the string
-            for(int i = 0; i < positionsOpen.Count; i++){
-                //makes sure current check will not result in an
-                //index out of range exception
-                if(positionsOpen[i] == 0){
-                    continue;
-                    //We already checked if the string was valid or not
-                    //so we really should only need to check for the case
-                    //of positionOpen and we don't have to worry about 
-                    //positionClose
+                //will loop until a there are no new corrections
+                while (correction)
+                {
+                    correction = false;
+                    input = Check(input);
                 }
-
-                //checks to see if a set of parantheses is not essential
-                if(input[positionsOpen[i-1]] == '(' &&
-                    input[positionsClose[positionsClose.Count-i]] == ')'){
-                    //Removes characters from input
-                    input = input.Remove(positionsClose[positionsClose.Count - i]);
-                    input = input.Remove(positionsOpen[i - 1],1);
+                //submits output
+                Console.WriteLine("Corrected string: " + input);
+            }
+        }
+        //checks for wrong paranthese
+        private static string Check(string input)
+        {
+            //checking attributes s = start e = end
+            int score;
+            int s;
+            int e;
+            
+            //loops through all the characters
+            for (int i = 0; i < input.Length-1; i++)
+            {
+                //if the current character is an open paranthese we're starting a check
+                if (input[i] == '(')
+                {
+                    //i will be the start of this paranthese set
+                    s = i;
+                    score = 1;
+                    //loops through the remaining characters looking for the end of this paranthese set
+                    for (int j = i + 1; j < input.Length; j++)
+                    {
+                        if (input[j] == '(') score++;
+                        if (input[j] == ')') score--;
+                        if(score == 0)
+                        {
+                            e = j;
+                            if (input[s + 1] == '(' &&
+                                input[e - 1] == ')')
+                            {
+                                input = input.Remove(e - 1,1);
+                                input = input.Remove(s + 1,1);
+                                correction = true;
+                                return input;
+                            }
+                            else if(e-s == 1)
+                            {
+                                input = input.Remove(e,1);
+                                input = input.Remove(s,1);
+                                correction = true;
+                                return input;
+                            }
+                            break;
+                        }
+                    }
                 }
             }
-            //submits output
-            Console.WriteLine(input);
+            correction = false;
+            return input;
         }
     }
 }
