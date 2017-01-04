@@ -1,0 +1,1 @@
+The purpose of this challenge is to create a program who takes an input ex. (a((b))(c)) and removes non essential nested loops. In the example 'b' is nested twice and thus would make the output (a(b)(c)).

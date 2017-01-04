@@ -1,0 +1,6 @@
+C:\Users\Noah Wilson\Documents\CodingChallenges\Challenge_001\bin\Debug\Challenge_001.exe.config
+C:\Users\Noah Wilson\Documents\CodingChallenges\Challenge_001\bin\Debug\Challenge_001.exe
+C:\Users\Noah Wilson\Documents\CodingChallenges\Challenge_001\bin\Debug\Challenge_001.pdb
+C:\Users\Noah Wilson\Documents\CodingChallenges\Challenge_001\obj\Debug\Challenge_001.csprojResolveAssemblyReference.cache
+C:\Users\Noah Wilson\Documents\CodingChallenges\Challenge_001\obj\Debug\Challenge_001.exe
+C:\Users\Noah Wilson\Documents\CodingChallenges\Challenge_001\obj\Debug\Challenge_001.pdb
