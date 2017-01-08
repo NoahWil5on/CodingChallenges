@@ -10,14 +10,15 @@ namespace Challenge_004
     {
         static Stack<double> numbers;
         static string[] pushers;
-        static string[] equation;
+        static string finalEQ;
+
         static void Main(string[] args)
         {
             Console.WriteLine("--Type an expression in RPN with spaces between each number/operator--");
             string input = Console.ReadLine();
             pushers = input.Split(' ');
-            equation = input.Split(' ');
             numbers = new Stack<double>();
+            finalEQ = "";
 
             FindResult();
 
@@ -27,6 +28,7 @@ namespace Challenge_004
             }
             else
             {
+                Console.Write(FindEquation() + "=");
                 Console.WriteLine(numbers.Pop().ToString());
             }
         }
@@ -94,6 +96,87 @@ namespace Challenge_004
                             return;
                     }
                 }
+            }
+        }
+        protected static string FindEquation()
+        {
+            List<string> pool = new List<string>();
+            List<string> eq = new List<string>();
+
+            bool onInt = true;
+            bool inPar = false;
+            bool found = false;
+
+            int parCount = 0;
+            int current = 0;
+
+            foreach(string s in pushers)
+            {
+                pool.Add(s);
+            }
+            while(pool.Count > 0)
+            {
+                if (onInt)
+                {
+                    if (inPar)
+                    {
+                        eq.Add("(");
+                        parCount++;
+                    }
+                    eq.Add(pool[0]);
+                    if(!inPar)
+                    {
+                        while (parCount > 0)
+                        {
+                            eq.Add(")"); parCount--;
+                        }
+                    }
+                    onInt = false;
+                    pool.RemoveAt(0);
+                    continue;
+                }
+                inPar = false;
+                onInt = true;
+                string outString;
+                double outDouble = 0;
+                for(int i = 0; i < pool.Count; i++)
+                {
+                    if (!double.TryParse(pool[i], out outDouble))
+                    {
+                        if (i + 1 != pool.Count)
+                        {
+                            if (!double.TryParse(pool[i + 1], out outDouble))
+                            {
+                                inPar = true;
+                            }
+                        }
+                        else {
+                            found = true;
+                            outString = pool[i];
+                            break;
+                        }                 
+                    }
+                    current = i+1;
+                }
+                if (found)
+                {
+                    eq.Add(pool[current]);
+                    pool.RemoveAt(current);
+                }
+                found = false;
+            }
+
+            StringBuilder(eq);
+
+            return finalEQ;
+        }
+        protected static void StringBuilder(List<string> ls)
+        {
+            if(ls.Count > 0)
+            {
+                finalEQ += ls[0];
+                ls.RemoveAt(0);
+                StringBuilder(ls);
             }
         }
     }
