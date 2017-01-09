@@ -82,7 +82,7 @@ namespace Challenge_004
                             a = numbers.Pop();
                             numbers.Push(Math.Pow(a, b));
                             break;
-                        case "!":
+                        /*case "!":
                             a = numbers.Pop();
                             double factorial = 1;
                             for (int i = 1; i < a + 1; i++)
@@ -90,7 +90,7 @@ namespace Challenge_004
                                 factorial *= i;
                             }
                             numbers.Push(factorial);
-                            break;
+                            break;*/
                         default:
                             Console.WriteLine("The entered string contains characters that cannot be parsed.");
                             return;
@@ -103,67 +103,77 @@ namespace Challenge_004
             List<string> pool = new List<string>();
             List<string> eq = new List<string>();
 
-            bool onInt = true;
             bool inPar = false;
-            bool found = false;
 
-            int parCount = 0;
-            int current = 0;
+            double outDouble = 0;
 
-            foreach(string s in pushers)
+            foreach (string s in pushers)
             {
                 pool.Add(s);
             }
             while(pool.Count > 0)
             {
-                if (onInt)
+                if(double.TryParse(pool[0],out outDouble))
                 {
-                    if (inPar)
-                    {
-                        eq.Add("(");
-                        parCount++;
-                    }
-                    eq.Add(pool[0]);
-                    if(!inPar)
-                    {
-                        while (parCount > 0)
-                        {
-                            eq.Add(")"); parCount--;
-                        }
-                    }
-                    onInt = false;
+                    eq.Insert(eq.Count,pool[0]);
+                    pool.RemoveAt(0);
+                    continue;
+                }               
+                    
+                if(double.TryParse(eq[eq.Count-1], out outDouble) && eq[eq.Count-2] != ")")
+                {
+                    eq.Insert(eq.Count - 2, "(");
+                    eq.Insert(eq.Count - 1, pool[0]);
+                    eq.Insert(eq.Count, ")");
                     pool.RemoveAt(0);
                     continue;
                 }
-                inPar = false;
-                onInt = true;
-                string outString;
-                double outDouble = 0;
-                for(int i = 0; i < pool.Count; i++)
+
+                int openCount = 0;
+                int closedCount = 0;
+
+                int operatorIndex = 0;
+                int parIndex = 0;
+
+                for (int i = eq.Count-1; i > -1; i--)
                 {
-                    if (!double.TryParse(pool[i], out outDouble))
+                    if(eq[i] == ")")
                     {
-                        if (i + 1 != pool.Count)
-                        {
-                            if (!double.TryParse(pool[i + 1], out outDouble))
-                            {
-                                inPar = true;
-                            }
-                        }
-                        else {
-                            found = true;
-                            outString = pool[i];
-                            break;
-                        }                 
+                        closedCount++;
                     }
-                    current = i+1;
+                    if(eq[i] == "(")
+                    {
+                        openCount++;
+                    }
+                    if(i == 0)
+                    {
+                        break;
+                    }
+                    if(!inPar && closedCount == openCount)
+                    {
+                        operatorIndex = i;
+                        openCount = 0;
+                        closedCount = 0;
+                        inPar = true;
+                        if(double.TryParse(eq[i-1],out outDouble))
+                        {
+                            parIndex = i - 1;
+                            break;
+                        }
+                    }
+                    if(inPar && (closedCount == openCount) && openCount != 0)
+                    {
+                        parIndex = i;
+                        break;
+                    }
                 }
-                if (found)
-                {
-                    eq.Add(pool[current]);
-                    pool.RemoveAt(current);
-                }
-                found = false;
+
+                inPar = false;
+
+                eq.Insert(operatorIndex, pool[0]);
+                eq.Insert(parIndex, "(");
+                eq.Insert(eq.Count, ")");
+                pool.RemoveAt(0);
             }
 
             StringBuilder(eq);
