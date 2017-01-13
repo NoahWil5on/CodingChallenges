@@ -1,0 +1,1 @@
+I used challenge_009 to implement a very basic spell checker. It loops through all the words in the english language and finds any word that is less that 1 character mistake off of an actual english word. Then it just prints that list.
