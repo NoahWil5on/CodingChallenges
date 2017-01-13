@@ -27,3 +27,7 @@ The book's approach was slightly more, I thought, verbose. The book checked for 
 The books solution was very straight forward and made sense. Either solution is works just as well, Maybe the books was easier for someone new to the program to understand. In the end I decided to stick with mine as it worked just as well; I also didn't feel compelled to try and implement the books approach as it was so simple.
 
 -Noah Wilson
+
+Epilogue:
+
+Scratch everything, My program worked perfectly when running against the tests in the book, but when I tried to implement it in another program, I quickly realized that it failed to realize when words were out of order, or a word (that was all but completely different) contained duplicate letters that would cancel themselves out and leave me thinking the two words were close to identical. My program has now been altered to refelct the book's solution.
